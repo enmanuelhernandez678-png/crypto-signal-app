@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Crypto Signal App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial;
+      background-color: #0f172a;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    .card {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 15px;
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #22c55e;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<h1>📈 Crypto Signal App</h1>
+
+<div class="card">
+  <h2>BTC/USDT</h2>
+  <p id="signal">Señal: Esperando...</p>
+  <button onclick="generateSignal()">Generar Señal</button>
+</div>
+
+<script>
+function generateSignal() {
+  const signals = ["COMPRAR 🚀", "VENDER 🔻", "ESPERAR ⏳"];
+  const random = Math.floor(Math.random() * signals.length);
+  document.getElementById("signal").innerText = "Señal: " + signals[random];
+}
+</script>
+
+</body>
+  </html>
