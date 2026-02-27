@@ -1,117 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Futures Scanner 15M</title>
-  <style>
-    body {
-      background: #0f172a;
-      color: white;
-      font-family: Arial;
-      text-align: center;
-      padding-top: 40px;
-    }
-    .alert {
-      font-size: 22px;
-      margin-top: 30px;
-      padding: 20px;
-      border-radius: 10px;
-    }
-    .buy { background: #064e3b; }
-    .sell { background: #7f1d1d; }
-  </style>
+    <title>Escáner Demo 15M</title>
+    <style>
+        body{
+            background:#0f172a;
+            color:white;
+            font-family:Arial;
+            text-align:center;
+            padding-top:40px;
+        }
+        .box{
+            margin-top:30px;
+            font-size:22px;
+            padding:20px;
+            border-radius:10px;
+            display:inline-block;
+        }
+        .buy{
+            background:#16a34a;
+        }
+        .sell{
+            background:#dc2626;
+        }
+        button{
+            padding:12px 25px;
+            font-size:18px;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            margin-top:20px;
+        }
+    </style>
 </head>
 <body>
 
-<h1>🚀 Futures Scanner 15M</h1>
-<p id="status">Escáner activo...</p>
-<div id="alertBox"></div>
+    <h1>📊 Escáner Demo 15M</h1>
+    <p>Cuenta DEMO - Solo práctica</p>
 
-<script>
-const symbols = [
-"BTCUSDT","ETHUSDT","SOLUSDT","XRPUSDT","BNBUSDT",
-"AVAXUSDT","DOGEUSDT","ADAUSDT","MATICUSDT","LINKUSDT",
-"LTCUSDT","TRXUSDT","ATOMUSDT","ETCUSDT","APTUSDT",
-"OPUSDT","ARBUSDT","INJUSDT","SUIUSDT","NEARUSDT"
-];
+    <button onclick="scan()">Escanear ahora</button>
 
-let index = 0;
+    <div id="resultado" class="box"></div>
 
-function calculateEMA(data, period) {
-  let k = 2 / (period + 1);
-  let ema = data[0];
-  for (let i = 1; i < data.length; i++) {
-    ema = data[i] * k + ema * (1 - k);
-  }
-  return ema;
-}
+    <script>
+        function scan(){
+            var random = Math.random();
 
-function calculateRSI(data, period = 14) {
-  let gains = 0;
-  let losses = 0;
-  for (let i = data.length - period; i < data.length - 1; i++) {
-    let diff = data[i + 1] - data[i];
-    if (diff > 0) gains += diff;
-    else losses -= diff;
-  }
-  let rs = gains / losses;
-  return 100 - (100 / (1 + rs));
-}
-
-async function scan() {
-  const symbol = symbols[index];
-
-  try {
-    const res = await fetch(
-      `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=15m&limit=200`
-    );
-    const data = await res.json();
-
-    const closes = data.map(c => parseFloat(c[4]));
-    const volumes = data.map(c => parseFloat(c[5]));
-
-    const ema50 = calculateEMA(closes.slice(-50), 50);
-    const ema200 = calculateEMA(closes.slice(-200), 200);
-    const rsi = calculateRSI(closes);
-
-    const avgVolume = volumes.slice(-20).reduce((a,b)=>a+b,0)/20;
-    const lastVolume = volumes[volumes.length-1];
-    const lastClose = closes[closes.length-1];
-    const prevClose = closes[closes.length-2];
-
-    let signal = null;
-
-    if (ema50 > ema200 && rsi > 55 && lastVolume > avgVolume && lastClose > prevClose) {
-      signal = "buy";
-    }
-
-    if (ema50 < ema200 && rsi < 45 && lastVolume > avgVolume && lastClose < prevClose) {
-      signal = "sell";
-    }
-
-    const alertBox = document.getElementById("alertBox");
-
-    if (signal) {
-      alertBox.className = "alert " + signal;
-      alertBox.innerHTML = `
-        🚨 OPORTUNIDAD DETECTADA<br>
-        Par: ${symbol}<br>
-        Tipo: ${signal === "buy" ? "🟢 COMPRA" : "🔴 VENTA"}
-      `;
-    } else {
-      document.getElementById("status").innerText =
-        "Escaneando " + symbol + "... sin oportunidad clara.";
-    }
-
-  } catch (err) {
-    console.log("Error:", err);
-  }
-
-  index = (index + 1) % symbols.length;
-}
-
-setInterval(scan, 120000);
-scan();
-</script>
+            if(random > 0.5){
+                document.getElementById("resultado").innerHTML = "🟢 SEÑAL: COMPRAR";
+                document.getElementById("resultado").className = "box buy";
+            }else{
+                document.getElementById("resultado").innerHTML = "🔴 SEÑAL: VENDER";
+                document.getElementById("resultado").className = "box sell";
+            }
+        }
+    </script>
 
 </body>
 </html>
